@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+  <div class="content">
+      <div class="row">
+          <div class="col-md-12">
+
+            <div class="card bg-dark text-white">
+                <img class="card-img home" src="{{ url_for('static', filename='img/bg.jpg') }}" alt="Card image">
+                <div class="card-img-overlay">
+                  <h1 class="card-title">Welcome Saumi.</h1>
+                  <p class="card-text">This is the master panel to upload, update and view all the reviews written for the blog site Movies By the Sea. Head over to the sidebar to view more.</p>
+                  <p class="card-text">All reviews updated to website.</p>
+                  <h6 class="card-text"><span style='font-weight:bold; font-size:1.2em'>{{ info['reviews'] }}</span> reviews written</h6>
+                  <h6 class="card-text"><span style='font-weight:bold; font-size:1.2em'>{{ ig_count }}</span> reviews on Instagram</h6>
+                  {% if info['messages'] == 0 %}
+                    <h6 class="card-text">No new messages</h6>
+                  {% else %}
+                    <h6 class="card-text"><span style='font-weight:bold; font-size:1.2em'>{{ info['messages'] }}</span> new messages</h6>
+                  {% endif %}
+                </div>
+              </div>
+
+          </div>
+      </div>
+  </div>
+
+{% endblock %}
