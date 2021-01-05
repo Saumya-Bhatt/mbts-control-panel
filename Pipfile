@@ -12,6 +12,7 @@ flask-wtf = "*"
 google-cloud-storage = "*"
 wtforms = "*"
 python-dotenv = "*"
+flask-login = "*"
 
 [requires]
 python_version = "3.8"

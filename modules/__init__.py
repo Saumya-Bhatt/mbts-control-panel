@@ -25,12 +25,12 @@ PYREBASE_CONFIG = {
     "serviceAccount"   : certi
 }
 
-email=os.getenv('EMAIL')
-password=os.getenv('PASSWORD')
+# email=os.getenv('EMAIL')
+# password=os.getenv('PASSWORD')
 
 firebase = pyrebase.initialize_app(PYREBASE_CONFIG)
 auth = firebase.auth()
-user = auth.sign_in_with_email_and_password(email, password)
+# user = auth.sign_in_with_email_and_password(email, password)
 db = firebase.database()
 
 
@@ -38,6 +38,5 @@ cred = firebase_admin.credentials.Certificate(certi)
 app_fb = firebase_admin.initialize_app(cred, {'storageBucket': os.getenv('STORAGE_BUCKET'),}, name='storage')
 app = Flask('__name__')
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
-
 
 from modules import routes

@@ -1,8 +1,8 @@
-from flask import render_template, url_for, redirect, flash
+from flask import render_template, url_for, redirect, flash, session, request
 from modules.functions import DatabaseOperations
 from modules.frame import NavbarActive, return_node, GetData
-from modules.forms import ReviewForm
-from modules import app
+from modules.forms import ReviewForm, LoginForm
+from modules import app, auth
 
 db_crud = DatabaseOperations()
 db_data = GetData()
@@ -10,12 +10,37 @@ db_data = GetData()
 
 
 
+@app.route('/',methods=['GET','POST'])
+def login():
+    user_login = LoginForm()
+    if user_login.validate_on_submit():
+        try:
+            user_token = auth.sign_in_with_email_and_password(user_login.email.data, user_login.password.data)
+            session['user'] = user_login.email.data
+            session['token'] = user_token
+            return redirect(url_for('home'))
+        except:
+            flash('Please check your credentials again')
+    return render_template('login.html', form=user_login)
 
-@app.route('/')
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
+
+
+@app.route('/home')
 def home():
+    if 'user' in session:
+        user = session['user']
+    else:
+        return render_template('login_enforcer.html')
     activate = NavbarActive()
     activate.set_home()
-    return render_template('home.html', info=db_data.get_numbers(), activate=activate)
+    return render_template('home.html', user=user, info=db_data.get_numbers(), activate=activate)
 
 
 
@@ -24,7 +49,11 @@ def entry():
 
     input_data = ReviewForm()
     if input_data.validate_on_submit():
-        db_crud.upload_review(input_data)
+
+        if 'token' in session:
+            db_crud.upload_review(input_data, session['token'])
+        else:
+            return render_template('login_enforcer.html')
         flash('New review entry was added to the database!')
         return redirect(url_for('table'))
 

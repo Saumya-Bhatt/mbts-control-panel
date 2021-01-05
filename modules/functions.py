@@ -1,4 +1,4 @@
-from modules import db, user, app_fb
+from modules import db, app_fb
 from modules.frame import GetData, bool2binary, save_poster, remove_img, return_node
 from os.path import join, dirname
 from dotenv import load_dotenv
@@ -41,7 +41,7 @@ def MovieInfo(query):
 class DatabaseOperations():
 
 
-    def upload_review(self, input_data):
+    def upload_review(self, input_data, token):
 
         save_poster(input_data.image.data)
         f_name,f_ext = os.path.splitext(input_data.image.data.filename)
@@ -55,7 +55,7 @@ class DatabaseOperations():
         dets = MovieInfo(input_data.name.data)
 
         DB_entry = {
-            'ID' : len(db_data.get_reviews) + 1,
+            'ID' : len(db_data.get_reviews()) + 1,
             'Name': input_data.name.data,
             'Review': input_data.review.data,
             'Instagram': 0,
@@ -77,7 +77,8 @@ class DatabaseOperations():
             'Trailer': dets['trailer']
         }
 
-        result = db.child("Reviews").push(DB_entry, user['idToken'])
+        result = db.child("Reviews").push(DB_entry, token['idToken'])
+        # result = db.child("Reviews").push(DB_entry, user_token['idToken'])
         print(result)
         remove_img('Extra/Images', picture_fn)
 
