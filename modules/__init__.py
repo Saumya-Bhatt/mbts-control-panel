@@ -25,8 +25,8 @@ PYREBASE_CONFIG = {
     "serviceAccount"   : certi
 }
 
-email='saumi10600@gmail.com'
-password='ThisIsMyMBTS1'
+email=os.getenv('EMAIL')
+password=os.getenv('PASSWORD')
 
 firebase = pyrebase.initialize_app(PYREBASE_CONFIG)
 auth = firebase.auth()
